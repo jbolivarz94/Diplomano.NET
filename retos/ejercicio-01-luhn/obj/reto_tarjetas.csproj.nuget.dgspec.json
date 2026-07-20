@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Workspace\\diplomado\\retos\\reto_tarjetas\\reto_tarjetas.csproj": {}
+    "D:\\Workspace\\diplomado\\retos\\ejercicio-01-luhn\\reto_tarjetas.csproj": {}
   },
   "projects": {
-    "D:\\Workspace\\diplomado\\retos\\reto_tarjetas\\reto_tarjetas.csproj": {
+    "D:\\Workspace\\diplomado\\retos\\ejercicio-01-luhn\\reto_tarjetas.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Workspace\\diplomado\\retos\\reto_tarjetas\\reto_tarjetas.csproj",
+        "projectUniqueName": "D:\\Workspace\\diplomado\\retos\\ejercicio-01-luhn\\reto_tarjetas.csproj",
         "projectName": "reto_tarjetas",
-        "projectPath": "D:\\Workspace\\diplomado\\retos\\reto_tarjetas\\reto_tarjetas.csproj",
+        "projectPath": "D:\\Workspace\\diplomado\\retos\\ejercicio-01-luhn\\reto_tarjetas.csproj",
         "packagesPath": "C:\\Users\\Jorge\\.nuget\\packages\\",
-        "outputPath": "D:\\Workspace\\diplomado\\retos\\reto_tarjetas\\obj\\",
+        "outputPath": "D:\\Workspace\\diplomado\\retos\\ejercicio-01-luhn\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Jorge\\AppData\\Roaming\\NuGet\\NuGet.Config"

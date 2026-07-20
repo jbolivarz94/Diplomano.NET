@@ -2,7 +2,7 @@
 using System.Text;
 using System.IO;
 
-namespace reto_tarjetas
+namespace ejercicio_01_luhn
 {
     static class Program
     {   
