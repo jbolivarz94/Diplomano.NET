@@ -1,0 +1,15 @@
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\bin\Debug\net9.0\jorge-bolivar.exe
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\bin\Debug\net9.0\jorge-bolivar.deps.json
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\bin\Debug\net9.0\jorge-bolivar.runtimeconfig.json
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\bin\Debug\net9.0\jorge-bolivar.dll
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\bin\Debug\net9.0\jorge-bolivar.pdb
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.AssemblyInfoInputs.cache
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.AssemblyInfo.cs
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.csproj.CoreCompileInputs.cache
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.sourcelink.json
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.dll
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\refint\jorge-bolivar.dll
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.pdb
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\jorge-bolivar.genruntimeconfig.cache
+D:\Workspace\diplomado\retos\ejercicio-02-poo\jorge-bolivar\obj\Debug\net9.0\ref\jorge-bolivar.dll
