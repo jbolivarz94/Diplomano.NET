@@ -23,6 +23,17 @@ namespace jorge_bolivar
             FechaCreacion = DateTime.Now;
         }
 
+        public Tarea(int id, string titulo, string descripcion, Prioridad prioridad, Categoria categoria, DateTime fechaCreacion)
+        {
+            Id = id;
+            Titulo = titulo;
+            Descripcion = descripcion;
+            Prioridad = prioridad;
+            Completada = false;
+            Categoria = categoria;
+            FechaCreacion = fechaCreacion;
+        }
+
         public virtual void MostrarInfo()
         {
             Console.WriteLine($"ID: {Id}");
@@ -36,7 +47,7 @@ namespace jorge_bolivar
 
         public virtual string Exportar()
         {
-            return $"ID: {Id}| Título: {Titulo}| Descripción: {Descripcion}| Prioridad: {Prioridad}| Completada: {Completada}| Categoría: {Categoria.Nombre} (Color: {Categoria.Color}, Descripción: {Categoria.Descripcion})| Fecha de Creación: {FechaCreacion}";
+            return $"ID: {Id}| Titulo: {Titulo}| Descripcion: {Descripcion}| Prioridad: {Prioridad}| Completada: {Completada}| Categoria: {Categoria.Nombre} (Color: {Categoria.Color}, Descripcion: {Categoria.Descripcion})| Fecha de Creacion: {FechaCreacion}";
         }
     }
 }

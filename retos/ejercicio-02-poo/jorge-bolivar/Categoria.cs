@@ -6,6 +6,13 @@ namespace jorge_bolivar
         public string Color { get; set; }
         public string Descripcion { get; set; }
 
+        public Categoria()
+        {
+            Nombre = "Default";
+            Color = "Blanco";
+            Descripcion = "";
+        }
+
         public Categoria(string nombre, string color, string descripcion)
         {
             Nombre = nombre;

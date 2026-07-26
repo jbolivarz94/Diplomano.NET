@@ -10,6 +10,12 @@ namespace jorge_bolivar
             FechaVencimiento = fechaVencimiento;
         }
 
+        public TareaConVencimiento(int id, string titulo, string descripcion, Prioridad prioridad, Categoria categoria, DateTime fechaCreacion, DateTime fechaVencimiento)
+            : base(id, titulo, descripcion, prioridad, categoria, fechaCreacion)
+        {
+            FechaVencimiento = fechaVencimiento;
+        }
+
         public int DiasRestantes
         {
             get
@@ -28,7 +34,7 @@ namespace jorge_bolivar
 
         public override string Exportar()
         {
-            return base.Exportar() + $"| Fecha de Vencimiento: {FechaVencimiento}| Días Restantes: {DiasRestantes}";
+            return base.Exportar() + $"| Fecha de Vencimiento: {FechaVencimiento}| Dias Restantes: {DiasRestantes}";
         }
     }
 }

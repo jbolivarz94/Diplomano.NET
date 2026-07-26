@@ -71,16 +71,44 @@ namespace jorge_bolivar
             File.WriteAllText(ruta, json);
         }
 
-        public void CargarDesdeJSON(string archivo)
+        public List<Tarea> CargarDesdeJSON(string archivo)
         {
-            if (File.Exists(archivo))
+            List<Tarea> tareas = new List<Tarea>();
+            try
             {
-                var lineas = File.ReadAllLines(archivo);
-                foreach (var linea in lineas)
+                if (File.Exists(archivo))
                 {
+                    string json = File.ReadAllText(archivo);
+
+                    if(string.IsNullOrWhiteSpace(json))
+                        return tareas;
                     
+                    var lineas = JsonSerializer.Deserialize<List<TareaDto>>(json) ?? new List<TareaDto>();
+
+                    foreach(var linea in lineas)
+                    {
+                        Categoria categoria = linea.Categoria ?? new Categoria();
+                        Tarea tarea;
+
+                        if(linea.FechaVencimiento.HasValue)
+                        {
+                            tarea = new TareaConVencimiento(linea.Id, linea.Titulo, linea.Descripcion, linea.Prioridad, categoria, linea.FechaCreacion, (linea.FechaVencimiento??DateTime.Now)); 
+                        }
+                        else
+                        {
+                            tarea = new Tarea(linea.Id, linea.Titulo, linea.Descripcion, linea.Prioridad, categoria, linea.FechaCreacion);
+                        }
+
+                        tareas.Add(tarea);
+                    }
+                    _tareas = tareas;
                 }
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Se ha generado un error en el cargue: {ex.Message}");
+                _tareas = new List<Tarea>();
             }
+            return _tareas;
         }
 
         public List<Categoria> CategoriasDisponible()
