@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("reto_tarjetas")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c32b4f6dc6d4c00f03e996ffdb8082867b8acce6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+771d3f5239b39d9c55bda2b6fa7768fa200fc5e3")]
 [assembly: System.Reflection.AssemblyProductAttribute("reto_tarjetas")]
 [assembly: System.Reflection.AssemblyTitleAttribute("reto_tarjetas")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

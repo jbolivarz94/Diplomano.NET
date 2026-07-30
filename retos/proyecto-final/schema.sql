@@ -4,22 +4,10 @@
 
 PRAGMA foreign_keys = ON;
 
--- 1. IDENTIDAD Y USUARIOS
-CREATE TABLE IF NOT EXISTS users (
-    id TEXT PRIMARY KEY,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    phone_number TEXT,
-    role TEXT NOT NULL CHECK (role IN ('Customer', 'Farmer', 'Admin')),
-    is_active INTEGER NOT NULL DEFAULT 1,
-    created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP)
-);
-
+-- 1. IDENTIDAD
 CREATE TABLE IF NOT EXISTS addresses (
     id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
+    farmer_profile_id TEXT NOT NULL,
     street_address TEXT NOT NULL,
     municipality TEXT NOT NULL,
     department TEXT NOT NULL,
@@ -27,20 +15,18 @@ CREATE TABLE IF NOT EXISTS addresses (
     latitude REAL,
     longitude REAL,
     is_default INTEGER NOT NULL DEFAULT 0,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (farmer_profile_id) REFERENCES farmer_profiles(id) ON DELETE CASCADE
 );
 
 -- 2. AGRICULTORES
 CREATE TABLE IF NOT EXISTS farmer_profiles (
     id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL UNIQUE,
     farm_name TEXT NOT NULL,
     description TEXT,
     verification_status TEXT NOT NULL DEFAULT 'Pending' CHECK (verification_status IN ('Pending', 'Approved', 'Rejected')),
     bank_account_info TEXT,
     profile_image_url TEXT,
-    created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 
 -- 3. CATÁLOGO
@@ -80,7 +66,6 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS orders (
     id TEXT PRIMARY KEY,
     order_number TEXT NOT NULL UNIQUE,
-    customer_id TEXT NOT NULL,
     farmer_profile_id TEXT NOT NULL,
     shipping_address_id TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Confirmed', 'Preparing', 'InTransit', 'Delivered', 'Cancelled')),
@@ -89,7 +74,6 @@ CREATE TABLE IF NOT EXISTS orders (
     total_amount REAL NOT NULL CHECK (total_amount >= 0),
     notes TEXT,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    FOREIGN KEY (customer_id) REFERENCES users(id),
     FOREIGN KEY (farmer_profile_id) REFERENCES farmer_profiles(id),
     FOREIGN KEY (shipping_address_id) REFERENCES addresses(id)
 );
@@ -129,33 +113,27 @@ CREATE TABLE IF NOT EXISTS deliveries (
 -- 6. RESEÑAS E IA (GROQ API)
 CREATE TABLE IF NOT EXISTS reviews (
     id TEXT PRIMARY KEY,
-    customer_id TEXT NOT NULL,
     product_id TEXT NOT NULL,
     rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    FOREIGN KEY (customer_id) REFERENCES users(id),
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ai_conversations (
     id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
     prompt_role TEXT NOT NULL CHECK (prompt_role IN ('system', 'user', 'assistant')),
     message TEXT NOT NULL,
     tokens_used INTEGER DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 
 -- ÍNDICES DE RENDIMIENTO
 CREATE INDEX IF NOT EXISTS idx_products_farmer ON products(farmer_profile_id);
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
-CREATE INDEX IF NOT EXISTS idx_orders_customer ON orders(customer_id);
 CREATE INDEX IF NOT EXISTS idx_orders_farmer ON orders(farmer_profile_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews(product_id);
-CREATE INDEX IF NOT EXISTS idx_ai_conversations_user ON ai_conversations(user_id);
 
 -- SEED DATA INICIAL
 INSERT OR IGNORE INTO categories (id, name, description) VALUES
