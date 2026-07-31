@@ -30,7 +30,7 @@ erDiagram
     products ||--o{ reviews : "receives"
     
     farmer_profiles {
-        TEXT id PK
+        INTEGER id PK
         TEXT farm_name
         TEXT description
         TEXT verification_status
@@ -51,8 +51,8 @@ erDiagram
     }
     
     products {
-        TEXT id PK
-        TEXT farmer_profile_id FK
+        INTEGER id PK
+        INTEGER farmer_profile_id FK
         INTEGER category_id FK
         INTEGER unit_of_measure_id FK
         TEXT name
@@ -66,9 +66,9 @@ erDiagram
     }
     
     orders {
-        TEXT id PK
+        INTEGER id PK
         TEXT order_number
-        TEXT farmer_profile_id FK
+        INTEGER farmer_profile_id FK
         TEXT status
         REAL total_amount
         TEXT notes
@@ -83,24 +83,24 @@ erDiagram
     }
     
     order_items {
-        TEXT id PK
-        TEXT order_id FK
-        TEXT product_id FK
+        INTEGER id PK
+        INTEGER order_id FK
+        INTEGER product_id FK
         REAL quantity
         REAL unit_price
         REAL total_price
     }
     
     reviews {
-        TEXT id PK
-        TEXT product_id FK
+        INTEGER id PK
+        INTEGER product_id FK
         INTEGER rating
         TEXT comment
         TEXT created_at
     }
     
     ai_conversations {
-        TEXT id PK
+        INTEGER id PK
         TEXT prompt_role
         TEXT message
         INTEGER tokens_used
@@ -124,11 +124,9 @@ El backend está construido con **ASP.NET Core 8 (.NET 8)** con la estructura ba
 - Integración real con la API de Groq para recomendaciones con IA (el endpoint `POST /api/ai/recommendations` responde actualmente con un stub).
 - Módulo de pagos (fuera de alcance; la entrega se programa al crear la orden).
 
-> Nota: los flujos y endpoints documentados a continuación representan el diseño objetivo del sistema.
-
 ## Flujos del Sistema (Diagramas Mermaid)
 
-En esta sección se presentan los flujos lógicos y básicos de interacción entre los diferentes componentes del sistema.
+En esta sección se presentan los flujos de interacción entre los clientes HTTP (Swagger, Postman o `MarketPlace.http`) y la API.
 
 ### 1. Registrar Productos (Agricultor)
 Este flujo representa cómo un agricultor agrega un nuevo producto a su catálogo disponible en la plataforma.
@@ -137,36 +135,30 @@ Este flujo representa cómo un agricultor agrega un nuevo producto a su catálog
 sequenceDiagram
     autonumber
     actor Agricultor
-    participant UI as "Interfaz de Usuario"
     participant API as "Backend (API)"
     participant DB as "Base de Datos"
 
-    Agricultor->>UI: Completa formulario de producto
-    Note over UI: Valida campos básicos<br/>(precio >= 0, stock >= 0)
-    UI->>API: POST /api/products (datos + Farmer Token)
+    Agricultor->>API: POST /api/products (datos del producto)
     API->>DB: Validar existencia de Farmer, Category y Unit of Measure
     DB-->>API: OK (Referencias válidas)
     API->>DB: INSERT INTO products
     DB-->>API: OK (Producto Creado)
-    API-->>UI: 201 Created (Detalles del producto)
-    UI-->>Agricultor: Muestra confirmación de registro y actualiza catálogo
+    API-->>Agricultor: 201 Created (Detalles del producto)
 ```
 
 ---
 
 ### 2. Registrar Órdenes de Compra (Consumidor)
-Este flujo detalla cómo un consumidor genera un pedido a partir de su carrito de compras.
+Este flujo detalla cómo un consumidor genera un pedido de compra mediante una solicitud HTTP.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Consumidor
-    participant UI as "Interfaz de Usuario"
     participant API as "Backend (API)"
     participant DB as "Base de Datos"
 
-    Consumidor->>UI: Confirma compra desde el carrito
-    UI->>API: POST /api/orders (Dirección, Tipo de entrega, Items y Cantidades)
+    Consumidor->>API: POST /api/orders (Dirección, Tipo de entrega, Items y Cantidades)
     API->>DB: Validar agricultor y consultar stock de los productos
     DB-->>API: Retorna stock actual y precios
     Note over API: Valida stock suficiente y calcula el Total<br/>de la orden (suma de items)
@@ -174,8 +166,7 @@ sequenceDiagram
     API->>DB: INSERT INTO order_items (por cada item)
     API->>DB: UPDATE products SET stock_quantity = stock_quantity - Qty
     DB-->>API: Transacción Exitosa
-    API-->>UI: 201 Created (Detalles del Pedido e ID)
-    UI-->>Consumidor: Muestra resumen del pedido y su estado
+    API-->>Consumidor: 201 Created (Detalles del Pedido e ID)
 ```
 
 ---
@@ -187,23 +178,18 @@ Lógica para actualizar el estado de la orden y registrar los datos de entrega.
 sequenceDiagram
     autonumber
     actor Repartidor
-    participant UI as "Interfaz de Usuario"
     participant API as "Backend (API)"
     participant DB as "Base de Datos"
 
-    Repartidor->>UI: Actualiza el estado de la orden
-    UI->>API: PATCH /api/orders/{id}/status (Preparing, InTransit, Delivered)
+    Repartidor->>API: PATCH /api/orders/{id}/status (Preparing, InTransit, Delivered)
     API->>DB: UPDATE orders SET status
     DB-->>API: OK (Actualizado)
-    API-->>UI: 204 NoContent
-    UI-->>Repartidor: Muestra el nuevo estado
+    API-->>Repartidor: 204 NoContent
     Note over Repartidor: Al despachar/entregar se registra la fecha real
-    Repartidor->>UI: Marca entrega realizada (fecha estimada, fecha real, notas)
-    UI->>API: PATCH /api/orders/{id}/delivery
+    Repartidor->>API: PATCH /api/orders/{id}/delivery (fecha estimada, fecha real, notas)
     API->>DB: UPDATE orders SET estimated_delivery_date, delivered_at, notes
     DB-->>API: OK (Actualizado)
-    API-->>UI: 204 NoContent
-    UI-->>Repartidor: Confirma entrega registrada
+    API-->>Repartidor: 204 NoContent
 ```
 
 ---
@@ -215,35 +201,30 @@ Lógica para que un consumidor califique un producto adquirido.
 sequenceDiagram
     autonumber
     actor Consumidor
-    participant UI as "Interfaz de Usuario"
     participant API as "Backend (API)"
     participant DB as "Base de Datos"
 
-    Consumidor->>UI: Escribe calificación (1-5 estrellas) y comentario
-    UI->>API: POST /api/products/{id}/reviews (Rating, Comment)
+    Consumidor->>API: POST /api/products/{id}/reviews (Rating, Comment)
     Note over API: Valida rango de Rating (1 a 5)
     API->>DB: INSERT INTO reviews
     DB-->>API: OK (Guardado)
-    API-->>UI: 201 Created (Reseña Registrada)
-    UI-->>Consumidor: Muestra mensaje de agradecimiento y publica la reseña
+    API-->>Consumidor: 201 Created (Reseña Registrada)
 ```
 
 ---
 
 ### 5. Recomendaciones con IA (Consumidor & Backend IA)
-Interacción con la API de Groq para sugerir productos o analizar datos usando modelos de lenguaje.
+Interacción con la API de Groq para sugerir productos o analizar datos usando modelos de lenguaje (diseño objetivo; el endpoint responde actualmente con un stub).
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Consumidor
-    participant UI as "Interfaz de Usuario"
     participant API as "Backend (API)"
     participant DB as "Base de Datos"
     participant Groq as "Groq API (LLM)"
 
-    Consumidor->>UI: Solicita recomendación o análisis (Chat / Recomendaciones)
-    UI->>API: POST /api/ai/recommendations (User Prompt)
+    Consumidor->>API: POST /api/ai/recommendations (User Prompt)
     API->>DB: Consultar catálogo de productos, compras del usuario y reviews
     DB-->>API: Retorna datos agregados de contexto
     Note over API: Prepara System Prompt con el contexto del<br/>negocio y datos del catálogo
@@ -251,8 +232,7 @@ sequenceDiagram
     Groq-->>API: Retorna respuesta inteligente (Recomendación)
     API->>DB: INSERT INTO ai_conversations (Guardar log de tokens e interacción)
     DB-->>API: OK (Guardado)
-    API-->>UI: 200 OK (Respuesta generada por la IA)
-    UI-->>Consumidor: Muestra la recomendación de manera amigable y visual
+    API-->>Consumidor: 200 OK (Respuesta generada por la IA)
 ```
 
 ## Endpoints de la API

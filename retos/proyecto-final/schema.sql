@@ -6,7 +6,7 @@ PRAGMA foreign_keys = ON;
 
 -- 1. AGRICULTORES
 CREATE TABLE IF NOT EXISTS farmer_profiles (
-    id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     farm_name TEXT NOT NULL,
     description TEXT,
     verification_status TEXT NOT NULL DEFAULT 'Pending' CHECK (verification_status IN ('Pending', 'Approved', 'Rejected')),
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS units_of_measure (
 );
 
 CREATE TABLE IF NOT EXISTS products (
-    id TEXT PRIMARY KEY,
-    farmer_profile_id TEXT NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    farmer_profile_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
     unit_of_measure_id INTEGER NOT NULL,
     name TEXT NOT NULL,
@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS products (
 
 -- 3. PEDIDOS (incluye dirección de envío y logística de entrega)
 CREATE TABLE IF NOT EXISTS orders (
-    id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_number TEXT NOT NULL UNIQUE,
-    farmer_profile_id TEXT NOT NULL,
+    farmer_profile_id INTEGER NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Confirmed', 'Preparing', 'InTransit', 'Delivered', 'Cancelled')),
     total_amount REAL NOT NULL CHECK (total_amount >= 0),
     notes TEXT,
@@ -65,9 +65,9 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE TABLE IF NOT EXISTS order_items (
-    id TEXT PRIMARY KEY,
-    order_id TEXT NOT NULL,
-    product_id TEXT NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
     quantity REAL NOT NULL CHECK (quantity > 0),
     unit_price REAL NOT NULL CHECK (unit_price >= 0),
     total_price REAL NOT NULL CHECK (total_price >= 0),
@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS order_items (
 
 -- 4. RESEÑAS E IA (GROQ API)
 CREATE TABLE IF NOT EXISTS reviews (
-    id TEXT PRIMARY KEY,
-    product_id TEXT NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER NOT NULL,
     rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS reviews (
 );
 
 CREATE TABLE IF NOT EXISTS ai_conversations (
-    id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     prompt_role TEXT NOT NULL CHECK (prompt_role IN ('system', 'user', 'assistant')),
     message TEXT NOT NULL,
     tokens_used INTEGER DEFAULT 0,
