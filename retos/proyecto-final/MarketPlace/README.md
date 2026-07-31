@@ -259,20 +259,20 @@ sequenceDiagram
 
 La siguiente tabla detalla los posibles endpoints que componen la API del sistema:
 
-| Módulo | Método | Endpoint | Descripción | Acceso / Rol |
+| Módulo | Método | Endpoint | Descripción |
 | :--- | :---: | :--- | :--- | :--- |
-| **Identidad / Perfiles** | `POST` | `/api/farmer-profiles` | Registrar un nuevo perfil de agricultor | Público / Agricultor |
-| | `GET` | `/api/farmer-profiles/{id}` | Obtener información detallada de un agricultor | Público |
-| **Catálogo** | `GET` | `/api/categories` | Listar todas las categorías de productos | Público |
-| | `GET` | `/api/units-of-measure` | Listar todas las unidades de medida | Público |
-| | `GET` | `/api/products` | Buscar y listar productos (filtros por categoría, orgánico y agricultor) | Público |
-| | `GET` | `/api/products/{id}` | Obtener el detalle de un producto específico | Público |
-| | `POST` | `/api/products` | Publicar un nuevo producto en el catálogo | Agricultor |
-| | `GET` | `/api/products/{id}/reviews` | Obtener las reseñas y valoración promedio de un producto | Público |
-| | `POST` | `/api/products/{id}/reviews` | Registrar calificación y comentario para un producto | Consumidor (Comprador) |
-| **Pedidos** | `POST` | `/api/orders` | Crear una orden de compra con dirección de envío, tipo de entrega y artículos | Consumidor |
-| | `GET` | `/api/orders` | Listar todas las órdenes | Autenticado |
-| | `GET` | `/api/orders/{id}` | Obtener detalles y artículos (`order_items`) de un pedido | Autenticado / Involucrado |
-| | `PATCH` | `/api/orders/{id}/status` | Cambiar el estado del pedido (`Pending`, `Confirmed`, `Preparing`, `InTransit`, `Delivered`, `Cancelled`) | Agricultor / Repartidor |
-| | `PATCH` | `/api/orders/{id}/delivery` | Actualizar datos de entrega (fecha estimada, fecha real, notas) | Agricultor / Repartidor |
-| **IA (Groq)** | `POST` | `/api/ai/recommendations` | Obtener sugerencias de productos personalizadas o análisis de precios | Autenticado |
+| **Identidad / Perfiles** | `POST` | `/api/farmer-profiles` | Registrar un nuevo perfil de agricultor |
+| | `GET` | `/api/farmer-profiles/{id}` | Obtener información detallada de un agricultor |
+| **Catálogo** | `GET` | `/api/categories` | Listar todas las categorías de productos |
+| | `GET` | `/api/units-of-measure` | Listar todas las unidades de medida |
+| | `GET` | `/api/products` | Buscar y listar productos (filtros por categoría, orgánico y agricultor) |
+| | `GET` | `/api/products/{id}` | Obtener el detalle de un producto específico |
+| | `POST` | `/api/products` | Publicar un nuevo producto en el catálogo |
+| | `GET` | `/api/products/{id}/reviews` | Obtener las reseñas y valoración promedio de un producto |
+| | `POST` | `/api/products/{id}/reviews` | Registrar calificación y comentario para un producto |
+| **Pedidos** | `POST` | `/api/orders` | Crear una orden de compra con dirección de envío, tipo de entrega y artículos |
+| | `GET` | `/api/orders` | Listar todas las órdenes |
+| | `GET` | `/api/orders/{id}` | Obtener detalles y artículos (`order_items`) de un pedido |
+| | `PATCH` | `/api/orders/{id}/status` | Cambiar el estado del pedido (`Pending`, `Confirmed`, `Preparing`, `InTransit`, `Delivered`, `Cancelled`) |
+| | `PATCH` | `/api/orders/{id}/delivery` | Actualizar datos de entrega (fecha estimada, fecha real, notas) |
+| **IA (Groq)** | `POST` | `/api/ai/recommendations` | Obtener sugerencias de productos personalizadas o análisis de precios |
