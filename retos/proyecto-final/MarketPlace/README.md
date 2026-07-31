@@ -152,9 +152,9 @@ Este flujo representa cómo un agricultor agrega un nuevo producto a su catálog
 sequenceDiagram
     autonumber
     actor Agricultor
-    participant UI as Interfaz de Usuario
-    participant API as Backend (API)
-    database DB as Base de Datos
+    participant UI as "Interfaz de Usuario"
+    participant API as "Backend (API)"
+    participant DB as "Base de Datos"
 
     Agricultor->>UI: Completa formulario de producto
     Note over UI: Valida campos básicos<br/>(precio >= 0, stock >= 0)
@@ -176,9 +176,9 @@ Este flujo detalla cómo un consumidor genera un pedido a partir de su carrito d
 sequenceDiagram
     autonumber
     actor Consumidor
-    participant UI as Interfaz de Usuario
-    participant API as Backend (API)
-    database DB as Base de Datos
+    participant UI as "Interfaz de Usuario"
+    participant API as "Backend (API)"
+    participant DB as "Base de Datos"
 
     Consumidor->>UI: Confirma compra desde el carrito
     UI->>API: POST /api/orders (Address ID, Items y Cantidades)
@@ -202,9 +202,9 @@ Detalla la lógica para formalizar el pago de una orden y actualizar los estados
 sequenceDiagram
     autonumber
     actor Consumidor
-    participant UI as Interfaz de Usuario
-    participant API as Backend (API)
-    database DB as Base de Datos
+    participant UI as "Interfaz de Usuario"
+    participant API as "Backend (API)"
+    participant DB as "Base de Datos"
 
     Consumidor->>UI: Selecciona método de pago e ingresa datos
     UI->>API: POST /api/payments (Order ID, Método, Referencia)
@@ -233,9 +233,9 @@ Lógica para que un consumidor califique un producto adquirido.
 sequenceDiagram
     autonumber
     actor Consumidor
-    participant UI as Interfaz de Usuario
-    participant API as Backend (API)
-    database DB as Base de Datos
+    participant UI as "Interfaz de Usuario"
+    participant API as "Backend (API)"
+    participant DB as "Base de Datos"
 
     Consumidor->>UI: Escribe calificación (1-5 estrellas) y comentario
     UI->>API: POST /api/reviews (Product ID, Rating, Comment)
@@ -255,10 +255,10 @@ Interacción con la API de Groq para sugerir productos o analizar datos usando m
 sequenceDiagram
     autonumber
     actor Consumidor
-    participant UI as Interfaz de Usuario
-    participant API as Backend (API)
-    database DB as Base de Datos
-    participant Groq as Groq API (LLM)
+    participant UI as "Interfaz de Usuario"
+    participant API as "Backend (API)"
+    participant DB as "Base de Datos"
+    participant Groq as "Groq API (LLM)"
 
     Consumidor->>UI: Solicita recomendación o análisis (Chat / Recomendaciones)
     UI->>API: POST /api/ai/recommendations (User Prompt)
