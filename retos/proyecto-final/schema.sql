@@ -4,37 +4,21 @@
 
 PRAGMA foreign_keys = ON;
 
--- 1. IDENTIDAD
-CREATE TABLE IF NOT EXISTS addresses (
-    id TEXT PRIMARY KEY,
-    farmer_profile_id TEXT NOT NULL,
-    street_address TEXT NOT NULL,
-    municipality TEXT NOT NULL,
-    department TEXT NOT NULL,
-    additional_details TEXT,
-    latitude REAL,
-    longitude REAL,
-    is_default INTEGER NOT NULL DEFAULT 0,
-    FOREIGN KEY (farmer_profile_id) REFERENCES farmer_profiles(id) ON DELETE CASCADE
-);
-
--- 2. AGRICULTORES
+-- 1. AGRICULTORES
 CREATE TABLE IF NOT EXISTS farmer_profiles (
     id TEXT PRIMARY KEY,
     farm_name TEXT NOT NULL,
     description TEXT,
     verification_status TEXT NOT NULL DEFAULT 'Pending' CHECK (verification_status IN ('Pending', 'Approved', 'Rejected')),
     bank_account_info TEXT,
-    profile_image_url TEXT,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 
--- 3. CATÁLOGO
+-- 2. CATÁLOGO
 CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
-    description TEXT,
-    image_url TEXT
+    description TEXT
 );
 
 CREATE TABLE IF NOT EXISTS units_of_measure (
@@ -54,7 +38,6 @@ CREATE TABLE IF NOT EXISTS products (
     stock_quantity REAL NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
     is_organic INTEGER NOT NULL DEFAULT 0,
     harvest_date TEXT,
-    image_url TEXT,
     is_active INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     FOREIGN KEY (farmer_profile_id) REFERENCES farmer_profiles(id) ON DELETE CASCADE,
@@ -62,20 +45,23 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (unit_of_measure_id) REFERENCES units_of_measure(id)
 );
 
--- 4. PEDIDOS
+-- 3. PEDIDOS (incluye dirección de envío y logística de entrega)
 CREATE TABLE IF NOT EXISTS orders (
     id TEXT PRIMARY KEY,
     order_number TEXT NOT NULL UNIQUE,
     farmer_profile_id TEXT NOT NULL,
-    shipping_address_id TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Confirmed', 'Preparing', 'InTransit', 'Delivered', 'Cancelled')),
-    subtotal REAL NOT NULL CHECK (subtotal >= 0),
-    shipping_fee REAL NOT NULL DEFAULT 0 CHECK (shipping_fee >= 0),
     total_amount REAL NOT NULL CHECK (total_amount >= 0),
     notes TEXT,
+    street_address TEXT NOT NULL,
+    municipality TEXT NOT NULL,
+    department TEXT NOT NULL,
+    additional_details TEXT,
+    delivery_type TEXT NOT NULL DEFAULT 'DirectHomeDelivery' CHECK (delivery_type IN ('FarmPickup', 'DirectHomeDelivery', 'LocalMarketPoint')),
+    estimated_delivery_date TEXT,
+    delivered_at TEXT,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    FOREIGN KEY (farmer_profile_id) REFERENCES farmer_profiles(id),
-    FOREIGN KEY (shipping_address_id) REFERENCES addresses(id)
+    FOREIGN KEY (farmer_profile_id) REFERENCES farmer_profiles(id)
 );
 
 CREATE TABLE IF NOT EXISTS order_items (
@@ -89,28 +75,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
--- 5. PAGOS Y LOGÍSTICA
-CREATE TABLE IF NOT EXISTS payments (
-    id TEXT PRIMARY KEY,
-    order_id TEXT NOT NULL UNIQUE,
-    method TEXT NOT NULL CHECK (method IN ('CashOnDelivery', 'BankTransfer', 'DigitalWallet')),
-    status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected')),
-    transaction_reference TEXT,
-    paid_at TEXT,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS deliveries (
-    id TEXT PRIMARY KEY,
-    order_id TEXT NOT NULL UNIQUE,
-    delivery_type TEXT NOT NULL CHECK (delivery_type IN ('FarmPickup', 'DirectHomeDelivery', 'LocalMarketPoint')),
-    estimated_delivery_date TEXT,
-    delivered_at TEXT,
-    notes TEXT,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-);
-
--- 6. RESEÑAS E IA (GROQ API)
+-- 4. RESEÑAS E IA (GROQ API)
 CREATE TABLE IF NOT EXISTS reviews (
     id TEXT PRIMARY KEY,
     product_id TEXT NOT NULL,

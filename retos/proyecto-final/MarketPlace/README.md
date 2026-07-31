@@ -10,8 +10,8 @@
 
 **Características:**
 - **Catálogo de Productos:** Gestión completa de productos con categorías y unidades de medida.
-- **Gestión de Pedidos:** Flujo completo de pedidos con estados y notificaciones.
-- **Pagos y Logística:** Integración de pagos y gestión de entregas.
+- **Gestión de Pedidos:** Flujo completo de pedidos con estados.
+- **Logística:** Gestión de entregas y despachos.
 - **Reseñas:** Sistema de reseñas para productos.
 - **IA:** Integración con GROQ API para análisis inteligente de datos.
 
@@ -21,29 +21,13 @@ A continuación se muestra el diagrama de entidad-relación (ERD) de la base de 
 
 ```mermaid
 erDiagram
-    farmer_profiles ||--o{ addresses : "has"
     farmer_profiles ||--o{ products : "offers"
     farmer_profiles ||--o{ orders : "receives"
-    addresses ||--o{ orders : "used_for_shipping"
     categories ||--o{ products : "categorizes"
     units_of_measure ||--o{ products : "measures"
     orders ||--o{ order_items : "contains"
     products ||--o{ order_items : "included_in"
-    orders ||--o| payments : "has"
-    orders ||--o| deliveries : "has"
     products ||--o{ reviews : "receives"
-    
-    addresses {
-        TEXT id PK
-        TEXT farmer_profile_id FK
-        TEXT street_address
-        TEXT municipality
-        TEXT department
-        TEXT additional_details
-        REAL latitude
-        REAL longitude
-        INTEGER is_default
-    }
     
     farmer_profiles {
         TEXT id PK
@@ -51,7 +35,6 @@ erDiagram
         TEXT description
         TEXT verification_status
         TEXT bank_account_info
-        TEXT profile_image_url
         TEXT created_at
     }
     
@@ -59,7 +42,6 @@ erDiagram
         INTEGER id PK
         TEXT name
         TEXT description
-        TEXT image_url
     }
     
     units_of_measure {
@@ -79,7 +61,6 @@ erDiagram
         REAL stock_quantity
         INTEGER is_organic
         TEXT harvest_date
-        TEXT image_url
         INTEGER is_active
         TEXT created_at
     }
@@ -88,12 +69,16 @@ erDiagram
         TEXT id PK
         TEXT order_number
         TEXT farmer_profile_id FK
-        TEXT shipping_address_id FK
         TEXT status
-        REAL subtotal
-        REAL shipping_fee
         REAL total_amount
         TEXT notes
+        TEXT street_address
+        TEXT municipality
+        TEXT department
+        TEXT additional_details
+        TEXT delivery_type
+        TEXT estimated_delivery_date
+        TEXT delivered_at
         TEXT created_at
     }
     
@@ -104,24 +89,6 @@ erDiagram
         REAL quantity
         REAL unit_price
         REAL total_price
-    }
-    
-    payments {
-        TEXT id PK
-        TEXT order_id FK
-        TEXT method
-        TEXT status
-        TEXT transaction_reference
-        TEXT paid_at
-    }
-    
-    deliveries {
-        TEXT id PK
-        TEXT order_id FK
-        TEXT delivery_type
-        TEXT estimated_delivery_date
-        TEXT delivered_at
-        TEXT notes
     }
     
     reviews {
@@ -140,6 +107,24 @@ erDiagram
         TEXT created_at
     }
 ```
+
+## Estado Actual del Proyecto
+
+El backend está construido con **ASP.NET Core 8 (.NET 8)** con la estructura base creada en `MarketPlace/`.
+
+**Implementado:**
+- **Capa de modelos** (`Models/`) con clases para las 8 tablas del esquema: `FarmerProfile`, `Categorie`, `UnitOfMeasure`, `Product`, `Order`, `OrderItem`, `Review` y `AiConversation`.
+- **Enums** para las columnas con restricciones `CHECK`: `VerificationStatus`, `StatusOrder`, `DeliveryType` y `PromptRole`.
+- **Controladores** (`Controllers/`) agrupados por dominio: perfiles de agricultores, catálogo (categorías, unidades, productos y reseñas), pedidos (incluye dirección de envío y entrega) e IA.
+- **Capa de datos**: EF Core + SQLite (`Data/AppDbContext.cs`); la base de datos se crea automáticamente desde `schema.sql` al iniciar la aplicación por primera vez.
+- **Swagger / OpenAPI** con documentación XML de todos los endpoints.
+
+**Pendiente:**
+- Autenticación y autorización por rol (Agricultor / Consumidor / Administrador).
+- Integración real con la API de Groq para recomendaciones con IA (el endpoint `POST /api/ai/recommendations` responde actualmente con un stub).
+- Módulo de pagos (fuera de alcance; la entrega se programa al crear la orden).
+
+> Nota: los flujos y endpoints documentados a continuación representan el diseño objetivo del sistema.
 
 ## Flujos del Sistema (Diagramas Mermaid)
 
@@ -181,47 +166,44 @@ sequenceDiagram
     participant DB as "Base de Datos"
 
     Consumidor->>UI: Confirma compra desde el carrito
-    UI->>API: POST /api/orders (Address ID, Items y Cantidades)
-    API->>DB: Consultar stock y dirección del consumidor
-    DB-->>API: Retorna stock actual y datos de dirección
-    Note over API: Valida stock suficiente y calcula:<br/>Subtotal, Costo de envío y Total
-    API->>DB: INSERT INTO orders (Status: 'Pending')
+    UI->>API: POST /api/orders (Dirección, Tipo de entrega, Items y Cantidades)
+    API->>DB: Validar agricultor y consultar stock de los productos
+    DB-->>API: Retorna stock actual y precios
+    Note over API: Valida stock suficiente y calcula el Total<br/>de la orden (suma de items)
+    API->>DB: INSERT INTO orders (Status: 'Pending', dirección y entrega)
     API->>DB: INSERT INTO order_items (por cada item)
     API->>DB: UPDATE products SET stock_quantity = stock_quantity - Qty
     DB-->>API: Transacción Exitosa
     API-->>UI: 201 Created (Detalles del Pedido e ID)
-    UI-->>Consumidor: Muestra resumen del pedido y botón para proceder al pago
+    UI-->>Consumidor: Muestra resumen del pedido y su estado
 ```
 
 ---
 
-### 3. Registrar Pago (Consumidor)
-Detalla la lógica para formalizar el pago de una orden y actualizar los estados correspondientes.
+### 3. Entrega de la Orden (Agricultor / Repartidor)
+Lógica para actualizar el estado de la orden y registrar los datos de entrega.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Consumidor
+    actor Repartidor
     participant UI as "Interfaz de Usuario"
     participant API as "Backend (API)"
     participant DB as "Base de Datos"
 
-    Consumidor->>UI: Selecciona método de pago e ingresa datos
-    UI->>API: POST /api/payments (Order ID, Método, Referencia)
-    API->>DB: Validar estado de la orden (Status == 'Pending')
-    DB-->>API: Orden válida
-    alt Pago en Efectivo (Contra Entrega)
-        API->>DB: INSERT INTO payments (Status: 'Pending')
-        Note over API, DB: La orden continúa en proceso de entrega
-    else Pago Digital (Transferencia Bancaria / Billetera Digital)
-        Note over API: Valida referencia de transacción
-        API->>DB: INSERT INTO payments (Status: 'Approved')
-        API->>DB: UPDATE orders SET status = 'Confirmed'
-        API->>DB: INSERT INTO deliveries (Crear programación de entrega)
-    end
-    DB-->>API: OK (Guardado)
-    API-->>UI: 200 OK (Detalles del pago y estado actualizado)
-    UI-->>Consumidor: Muestra confirmación del pago y estado de su entrega
+    Repartidor->>UI: Actualiza el estado de la orden
+    UI->>API: PATCH /api/orders/{id}/status (Preparing, InTransit, Delivered)
+    API->>DB: UPDATE orders SET status
+    DB-->>API: OK (Actualizado)
+    API-->>UI: 204 NoContent
+    UI-->>Repartidor: Muestra el nuevo estado
+    Note over Repartidor: Al despachar/entregar se registra la fecha real
+    Repartidor->>UI: Marca entrega realizada (fecha estimada, fecha real, notas)
+    UI->>API: PATCH /api/orders/{id}/delivery
+    API->>DB: UPDATE orders SET estimated_delivery_date, delivered_at, notes
+    DB-->>API: OK (Actualizado)
+    API-->>UI: 204 NoContent
+    UI-->>Repartidor: Confirma entrega registrada
 ```
 
 ---
@@ -238,7 +220,7 @@ sequenceDiagram
     participant DB as "Base de Datos"
 
     Consumidor->>UI: Escribe calificación (1-5 estrellas) y comentario
-    UI->>API: POST /api/reviews (Product ID, Rating, Comment)
+    UI->>API: POST /api/products/{id}/reviews (Rating, Comment)
     Note over API: Valida rango de Rating (1 a 5)
     API->>DB: INSERT INTO reviews
     DB-->>API: OK (Guardado)
@@ -281,26 +263,16 @@ La siguiente tabla detalla los posibles endpoints que componen la API del sistem
 | :--- | :---: | :--- | :--- | :--- |
 | **Identidad / Perfiles** | `POST` | `/api/farmer-profiles` | Registrar un nuevo perfil de agricultor | Público / Agricultor |
 | | `GET` | `/api/farmer-profiles/{id}` | Obtener información detallada de un agricultor | Público |
-| | `PUT` | `/api/farmer-profiles/{id}` | Actualizar datos del perfil de un agricultor | Agricultor Propietario |
-| | `POST` | `/api/addresses` | Registrar una dirección física (despacho/entrega) | Autenticado |
-| | `GET` | `/api/addresses` | Listar direcciones registradas por el usuario | Autenticado |
-| | `DELETE` | `/api/addresses/{id}` | Eliminar una dirección | Autenticado |
 | **Catálogo** | `GET` | `/api/categories` | Listar todas las categorías de productos | Público |
-| | `POST` | `/api/categories` | Crear una nueva categoría | Administrador |
 | | `GET` | `/api/units-of-measure` | Listar todas las unidades de medida | Público |
-| | `GET` | `/api/products` | Buscar y listar productos (filtros por categoría, precio, orgánico, agricultor) | Público |
+| | `GET` | `/api/products` | Buscar y listar productos (filtros por categoría, orgánico y agricultor) | Público |
 | | `GET` | `/api/products/{id}` | Obtener el detalle de un producto específico | Público |
 | | `POST` | `/api/products` | Publicar un nuevo producto en el catálogo | Agricultor |
-| | `PUT` | `/api/products/{id}` | Actualizar información o stock de un producto | Agricultor Propietario |
-| | `DELETE` | `/api/products/{id}` | Desactivar/Eliminar un producto del catálogo | Agricultor Propietario |
-| **Pedidos** | `POST` | `/api/orders` | Crear una nueva orden de compra (carrito de compras) | Consumidor |
-| | `GET` | `/api/orders` | Listar órdenes asociadas (compras del consumidor o ventas del agricultor) | Autenticado |
+| | `GET` | `/api/products/{id}/reviews` | Obtener las reseñas y valoración promedio de un producto | Público |
+| | `POST` | `/api/products/{id}/reviews` | Registrar calificación y comentario para un producto | Consumidor (Comprador) |
+| **Pedidos** | `POST` | `/api/orders` | Crear una orden de compra con dirección de envío, tipo de entrega y artículos | Consumidor |
+| | `GET` | `/api/orders` | Listar todas las órdenes | Autenticado |
 | | `GET` | `/api/orders/{id}` | Obtener detalles y artículos (`order_items`) de un pedido | Autenticado / Involucrado |
 | | `PATCH` | `/api/orders/{id}/status` | Cambiar el estado del pedido (`Pending`, `Confirmed`, `Preparing`, `InTransit`, `Delivered`, `Cancelled`) | Agricultor / Repartidor |
-| **Pagos y Logística** | `POST` | `/api/payments` | Registrar o procesar el pago de una orden de compra | Consumidor |
-| | `GET` | `/api/orders/{id}/payment` | Consultar la información del pago de un pedido | Autenticado / Involucrado |
-| | `GET` | `/api/orders/{id}/delivery` | Consultar información logística y fecha estimada de entrega | Autenticado / Involucrado |
-| | `PATCH` | `/api/deliveries/{id}` | Actualizar datos de despacho/entrega (fecha real, notas logísticas) | Agricultor / Repartidor |
-| **Reseñas** | `POST` | `/api/reviews` | Registrar calificación y comentario para un producto | Consumidor (Comprador) |
-| | `GET` | `/api/products/{id}/reviews` | Obtener todas las reseñas y valoración promedio de un producto | Público |
+| | `PATCH` | `/api/orders/{id}/delivery` | Actualizar datos de entrega (fecha estimada, fecha real, notas) | Agricultor / Repartidor |
 | **IA (Groq)** | `POST` | `/api/ai/recommendations` | Obtener sugerencias de productos personalizadas o análisis de precios | Autenticado |
