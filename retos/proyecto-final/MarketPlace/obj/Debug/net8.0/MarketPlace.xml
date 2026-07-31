@@ -1,0 +1,567 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MarketPlace</name>
+    </assembly>
+    <members>
+        <member name="T:market_place.AiController">
+            <summary>
+            Recomendaciones con IA (Groq).
+            </summary>
+        </member>
+        <member name="M:market_place.AiController.#ctor(market_place.AppDbContext)">
+            <summary>
+            Inicializa el controlador con el contexto de base de datos.
+            </summary>
+            <param name="db">Contexto de Entity Framework Core (AppDbContext).</param>
+        </member>
+        <member name="M:market_place.AiController.GetRecommendations(market_place.AiRequest)">
+            <summary>
+            Genera recomendaciones de productos a partir de un prompt del usuario.
+            </summary>
+            <param name="request">Solicitud con el prompt del usuario para generar recomendaciones.</param>
+            <returns>200 OK con la respuesta de la IA y los tokens utilizados.</returns>
+        </member>
+        <member name="T:market_place.FarmerProfilesController">
+            <summary>
+            Gestión de perfiles de agricultores.
+            </summary>
+        </member>
+        <member name="M:market_place.FarmerProfilesController.#ctor(market_place.AppDbContext)">
+            <summary>
+            Inicializa el controlador con el contexto de base de datos.
+            </summary>
+            <param name="db">Contexto de Entity Framework Core (AppDbContext).</param>
+        </member>
+        <member name="M:market_place.FarmerProfilesController.GetAll">
+            <summary>
+            Obtiene todos los perfiles de agricultores registrados.
+            </summary>
+            <returns>Lista de perfiles de agricultores, o 404 si no hay registros.</returns>
+        </member>
+        <member name="M:market_place.FarmerProfilesController.GetById(System.Int32)">
+            <summary>
+            Obtiene el perfil de un agricultor por su ID.
+            </summary>
+            <param name="id">ID numérico del perfil de agricultor.</param>
+            <returns>El perfil solicitado, o 404 si no existe.</returns>
+        </member>
+        <member name="M:market_place.FarmerProfilesController.Create(market_place.FarmerProfile)">
+            <summary>
+            Registra un nuevo perfil de agricultor.
+            </summary>
+            <param name="farmer">Datos del perfil: nombre de la finca, descripción, estado de verificación e información bancaria.</param>
+            <returns>201 Created con el perfil registrado (el ID se genera automáticamente).</returns>
+        </member>
+        <member name="T:market_place.OrdersController">
+            <summary>
+            Gestión de órdenes de compra: creación, estados y entrega.
+            </summary>
+        </member>
+        <member name="M:market_place.OrdersController.#ctor(market_place.AppDbContext)">
+            <summary>
+            Inicializa el controlador con el contexto de base de datos.
+            </summary>
+            <param name="db">Contexto de Entity Framework Core (AppDbContext).</param>
+        </member>
+        <member name="M:market_place.OrdersController.GetAll">
+            <summary>
+            Lista todas las órdenes de compra.
+            </summary>
+            <returns>Lista de órdenes registradas.</returns>
+        </member>
+        <member name="M:market_place.OrdersController.GetById(System.Int32)">
+            <summary>
+            Obtiene el detalle de una orden con sus artículos (order_items).
+            </summary>
+            <param name="id">ID numérico de la orden.</param>
+            <returns>Objeto con la orden y su lista de artículos, o 404 si la orden no existe.</returns>
+        </member>
+        <member name="M:market_place.OrdersController.Create(market_place.OrderRequest)">
+            <summary>
+            Crea una orden de compra: valida stock, calcula el total, descuenta inventario y programa la entrega.
+            </summary>
+            <param name="request">Datos de la orden: agricultor, dirección de envío, tipo de entrega y artículos solicitados.</param>
+            <returns>201 Created con la orden registrada (ID generado automáticamente), o 400 si los datos son inválidos, el agricultor no existe o hay stock insuficiente.</returns>
+        </member>
+        <member name="M:market_place.OrdersController.UpdateStatus(System.Int32,market_place.StatusUpdateRequest)">
+            <summary>
+            Cambia el estado de una orden (Pending, Confirmed, Preparing, InTransit, Delivered, Cancelled).
+            </summary>
+            <param name="id">ID numérico de la orden.</param>
+            <param name="request">Nuevo estado de la orden.</param>
+            <returns>204 NoContent si se actualizó correctamente, o 404 si la orden no existe.</returns>
+        </member>
+        <member name="M:market_place.OrdersController.UpdateDelivery(System.Int32,market_place.DeliveryUpdateRequest)">
+            <summary>
+            Actualiza los datos de entrega de la orden (fecha estimada, fecha real, notas).
+            </summary>
+            <param name="id">ID numérico de la orden.</param>
+            <param name="request">Datos de entrega: fecha estimada, fecha real de entrega y notas.</param>
+            <returns>204 NoContent si se actualizó correctamente, o 404 si la orden no existe.</returns>
+        </member>
+        <member name="T:market_place.ProductsController">
+            <summary>
+            Catálogo: categorías, unidades de medida, productos y reseñas.
+            </summary>
+        </member>
+        <member name="M:market_place.ProductsController.#ctor(market_place.AppDbContext)">
+            <summary>
+            Inicializa el controlador con el contexto de base de datos.
+            </summary>
+            <param name="db">Contexto de Entity Framework Core (AppDbContext).</param>
+        </member>
+        <member name="M:market_place.ProductsController.ListCategories">
+            <summary>
+            Lista todas las categorías de productos.
+            </summary>
+            <returns>Lista de categorías registradas en el catálogo.</returns>
+        </member>
+        <member name="M:market_place.ProductsController.ListUnitsOfMeasure">
+            <summary>
+            Lista todas las unidades de medida.
+            </summary>
+            <returns>Lista de unidades de medida disponibles (kg, lb, atado, unidad, caja).</returns>
+        </member>
+        <member name="M:market_place.ProductsController.GetAll(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Lista productos activos con filtros opcionales por categoría, orgánico y agricultor.
+            </summary>
+            <param name="categoryId">Filtro opcional: ID de la categoría del producto.</param>
+            <param name="isOrganic">Filtro opcional: 1 para solo orgánicos, 0 para solo no orgánicos.</param>
+            <param name="farmerProfileId">Filtro opcional: ID del perfil de agricultor que publica el producto.</param>
+            <returns>Lista de productos activos (isActive = 1) que cumplen los filtros.</returns>
+        </member>
+        <member name="M:market_place.ProductsController.GetById(System.Int32)">
+            <summary>
+            Obtiene el detalle de un producto por su ID.
+            </summary>
+            <param name="id">ID numérico del producto.</param>
+            <returns>El producto solicitado, o 404 si no existe.</returns>
+        </member>
+        <member name="M:market_place.ProductsController.Create(market_place.Product)">
+            <summary>
+            Publica un nuevo producto en el catálogo.
+            </summary>
+            <param name="product">Datos del producto: agricultor, categoría, unidad de medida, precio y stock.</param>
+            <returns>201 Created con el producto registrado (el ID se genera automáticamente), o 400 si las referencias no existen o los valores son inválidos.</returns>
+        </member>
+        <member name="M:market_place.ProductsController.GetReviews(System.Int32)">
+            <summary>
+            Obtiene las reseñas y la valoración promedio de un producto.
+            </summary>
+            <param name="productId">ID numérico del producto.</param>
+            <returns>Objeto con la lista de reseñas y el promedio de calificaciones (0 si no hay reseñas).</returns>
+        </member>
+        <member name="M:market_place.ProductsController.CreateReview(System.Int32,market_place.Review)">
+            <summary>
+            Registra una calificación (1-5) y comentario para un producto.
+            </summary>
+            <param name="productId">ID numérico del producto a calificar.</param>
+            <param name="review">Datos de la reseña: rating (1 a 5) y comentario.</param>
+            <returns>201 Created con la reseña registrada, o 400 si el producto no existe o el rating está fuera del rango.</returns>
+        </member>
+        <member name="T:market_place.AppDbContext">
+            <summary>
+            Contexto de Entity Framework Core: expone las entidades de AgroMarket Local
+            y mapea cada una a su tabla física del esquema SQLite (snake_case).
+            </summary>
+        </member>
+        <member name="M:market_place.AppDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{market_place.AppDbContext})">
+            <summary>
+            Inicializa el contexto con las opciones de configuración.
+            </summary>
+            <param name="options">Opciones del contexto (proveedor SQLite y cadena de conexión).</param>
+        </member>
+        <member name="P:market_place.AppDbContext.FarmerProfiles">
+            <summary>Perfiles de agricultores (tabla farmer_profiles).</summary>
+        </member>
+        <member name="P:market_place.AppDbContext.Categories">
+            <summary>Categorías de productos (tabla categories).</summary>
+        </member>
+        <member name="P:market_place.AppDbContext.UnitsOfMeasure">
+            <summary>Unidades de medida (tabla units_of_measure).</summary>
+        </member>
+        <member name="P:market_place.AppDbContext.Products">
+            <summary>Productos del catálogo (tabla products).</summary>
+        </member>
+        <member name="P:market_place.AppDbContext.Orders">
+            <summary>Órdenes de compra (tabla orders).</summary>
+        </member>
+        <member name="P:market_place.AppDbContext.OrderItems">
+            <summary>Artículos de las órdenes (tabla order_items).</summary>
+        </member>
+        <member name="P:market_place.AppDbContext.Reviews">
+            <summary>Reseñas de productos (tabla reviews).</summary>
+        </member>
+        <member name="P:market_place.AppDbContext.AiConversations">
+            <summary>Conversaciones con la IA (tabla ai_conversations).</summary>
+        </member>
+        <member name="M:market_place.AppDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Configura el modelo: nombres de tablas y columnas (snake_case),
+            llaves primarias, llaves foráneas, índices y conversiones de enums a texto.
+            </summary>
+            <param name="modelBuilder">Constructor del modelo de EF Core.</param>
+        </member>
+        <member name="T:market_place.AiConversation">
+            <summary>
+            Conversación con la IA (Groq): mensaje de system, user o assistant con su rol y tokens utilizados.
+            Mapea a la tabla "ai_conversations".
+            </summary>
+        </member>
+        <member name="P:market_place.AiConversation.id">
+            <summary>Identificador único de la conversación (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.AiConversation.promptRole">
+            <summary>Rol del mensaje en la conversación (system, user, assistant).</summary>
+        </member>
+        <member name="P:market_place.AiConversation.message">
+            <summary>Contenido del mensaje.</summary>
+        </member>
+        <member name="P:market_place.AiConversation.tokensUsed">
+            <summary>Cantidad de tokens utilizados por el mensaje.</summary>
+        </member>
+        <member name="P:market_place.AiConversation.createdAt">
+            <summary>Fecha de creación del mensaje en formato "yyyy-MM-dd HH:mm:ss".</summary>
+        </member>
+        <member name="T:market_place.AiRequest">
+            <summary>
+            Solicitud para generar recomendaciones de productos con IA.
+            </summary>
+        </member>
+        <member name="P:market_place.AiRequest.prompt">
+            <summary>Prompt del usuario con el cual se generan las recomendaciones.</summary>
+        </member>
+        <member name="T:market_place.Categorie">
+            <summary>
+            Categoría de productos agrícolas (Frutas, Hortalizas, Tubérculos, Lácteos...).
+            Mapea a la tabla "categories".
+            </summary>
+        </member>
+        <member name="P:market_place.Categorie.id">
+            <summary>Identificador único de la categoría (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.Categorie.name">
+            <summary>Nombre de la categoría (único).</summary>
+        </member>
+        <member name="P:market_place.Categorie.description">
+            <summary>Descripción de la categoría.</summary>
+        </member>
+        <member name="T:market_place.DeliveryUpdateRequest">
+            <summary>
+            Solicitud para actualizar los datos de entrega de una orden.
+            </summary>
+        </member>
+        <member name="P:market_place.DeliveryUpdateRequest.estimatedDeliveryDate">
+            <summary>Nueva fecha estimada de entrega en formato "yyyy-MM-dd" (opcional).</summary>
+        </member>
+        <member name="P:market_place.DeliveryUpdateRequest.deliveredAt">
+            <summary>Fecha real de entrega en formato "yyyy-MM-dd HH:mm:ss" (opcional).</summary>
+        </member>
+        <member name="P:market_place.DeliveryUpdateRequest.notes">
+            <summary>Notas de la entrega (opcional).</summary>
+        </member>
+        <member name="T:market_place.DeliveryType">
+            <summary>
+            Tipo de entrega de una orden de compra.
+            </summary>
+        </member>
+        <member name="F:market_place.DeliveryType.FarmPickup">
+            <summary>El consumidor recoge el pedido directamente en la finca.</summary>
+        </member>
+        <member name="F:market_place.DeliveryType.DirectHomeDelivery">
+            <summary>El pedido se entrega directamente en el domicilio del consumidor.</summary>
+        </member>
+        <member name="F:market_place.DeliveryType.LocalMarketPoint">
+            <summary>El pedido se entrega en un punto de mercado local.</summary>
+        </member>
+        <member name="T:market_place.PromptRole">
+            <summary>
+            Rol de un mensaje dentro de una conversación con la IA.
+            </summary>
+        </member>
+        <member name="F:market_place.PromptRole.system">
+            <summary>Mensaje de sistema que define el comportamiento de la IA.</summary>
+        </member>
+        <member name="F:market_place.PromptRole.user">
+            <summary>Mensaje del usuario.</summary>
+        </member>
+        <member name="F:market_place.PromptRole.assistant">
+            <summary>Respuesta generada por la IA.</summary>
+        </member>
+        <member name="T:market_place.FarmerProfile">
+            <summary>
+            Perfil de un agricultor: identidad de la finca, estado de verificación e información de pago.
+            Mapea a la tabla "farmer_profiles".
+            </summary>
+        </member>
+        <member name="P:market_place.FarmerProfile.id">
+            <summary>Identificador único del perfil (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.FarmerProfile.farmName">
+            <summary>Nombre de la finca o del agricultor.</summary>
+        </member>
+        <member name="P:market_place.FarmerProfile.description">
+            <summary>Descripción de la finca y sus productos.</summary>
+        </member>
+        <member name="P:market_place.FarmerProfile.verificationStatus">
+            <summary>Estado de verificación del perfil (Pending, Approved, Rejected).</summary>
+        </member>
+        <member name="P:market_place.FarmerProfile.bankAccountInfo">
+            <summary>Información de la cuenta bancaria para pagos (opcional).</summary>
+        </member>
+        <member name="P:market_place.FarmerProfile.createdAt">
+            <summary>Fecha de creación del perfil en formato "yyyy-MM-dd HH:mm:ss".</summary>
+        </member>
+        <member name="T:market_place.Order">
+            <summary>
+            Orden de compra generada por un consumidor con dirección de envío y logística de entrega.
+            Mapea a la tabla "orders".
+            </summary>
+        </member>
+        <member name="P:market_place.Order.id">
+            <summary>Identificador único de la orden (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.Order.orderNumber">
+            <summary>Número de orden legible y único (ej. "ORD-20260731120434-C546").</summary>
+        </member>
+        <member name="P:market_place.Order.farmerProfileId">
+            <summary>ID del perfil de agricultor que atiende la orden (FK a farmer_profiles).</summary>
+        </member>
+        <member name="P:market_place.Order.status">
+            <summary>Estado actual de la orden (Pending, Confirmed, Preparing, InTransit, Delivered, Cancelled).</summary>
+        </member>
+        <member name="P:market_place.Order.totalAmount">
+            <summary>Monto total de la orden (suma del total de sus artículos).</summary>
+        </member>
+        <member name="P:market_place.Order.notes">
+            <summary>Notas generales de la orden (opcional).</summary>
+        </member>
+        <member name="P:market_place.Order.streetAddress">
+            <summary>Calle y número de la dirección de envío (obligatoria).</summary>
+        </member>
+        <member name="P:market_place.Order.municipality">
+            <summary>Municipio de la dirección de envío (obligatorio).</summary>
+        </member>
+        <member name="P:market_place.Order.department">
+            <summary>Departamento de la dirección de envío (obligatorio).</summary>
+        </member>
+        <member name="P:market_place.Order.additionalDetails">
+            <summary>Detalles adicionales de la dirección (opcional).</summary>
+        </member>
+        <member name="P:market_place.Order.deliveryType">
+            <summary>Tipo de entrega de la orden (FarmPickup, DirectHomeDelivery, LocalMarketPoint).</summary>
+        </member>
+        <member name="P:market_place.Order.estimatedDeliveryDate">
+            <summary>Fecha estimada de entrega en formato "yyyy-MM-dd" (opcional).</summary>
+        </member>
+        <member name="P:market_place.Order.deliveredAt">
+            <summary>Fecha real de entrega en formato "yyyy-MM-dd HH:mm:ss" (opcional).</summary>
+        </member>
+        <member name="P:market_place.Order.createdAt">
+            <summary>Fecha de creación de la orden en formato "yyyy-MM-dd HH:mm:ss".</summary>
+        </member>
+        <member name="T:market_place.OrderItem">
+            <summary>
+            Artículo de una orden: detalle de producto, cantidad y precios al momento de la compra.
+            Mapea a la tabla "order_items".
+            </summary>
+        </member>
+        <member name="P:market_place.OrderItem.id">
+            <summary>Identificador único del artículo (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.OrderItem.orderId">
+            <summary>ID de la orden a la que pertenece el artículo (FK a orders).</summary>
+        </member>
+        <member name="P:market_place.OrderItem.productId">
+            <summary>ID del producto comprado (FK a products).</summary>
+        </member>
+        <member name="P:market_place.OrderItem.quantity">
+            <summary>Cantidad comprada del producto (mayor a 0).</summary>
+        </member>
+        <member name="P:market_place.OrderItem.unitPrice">
+            <summary>Precio unitario del producto al momento de la compra.</summary>
+        </member>
+        <member name="P:market_place.OrderItem.totalPrice">
+            <summary>Precio total del artículo (cantidad x precio unitario).</summary>
+        </member>
+        <member name="T:market_place.OrderRequest">
+            <summary>
+            Solicitud para crear una orden de compra: dirección de envío, tipo de entrega y artículos.
+            </summary>
+        </member>
+        <member name="P:market_place.OrderRequest.farmerProfileId">
+            <summary>ID del perfil de agricultor que atiende la orden.</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.notes">
+            <summary>Notas generales de la orden (opcional).</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.streetAddress">
+            <summary>Calle y número de la dirección de envío (obligatoria).</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.municipality">
+            <summary>Municipio de la dirección de envío (obligatorio).</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.department">
+            <summary>Departamento de la dirección de envío (obligatorio).</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.additionalDetails">
+            <summary>Detalles adicionales de la dirección (opcional).</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.deliveryType">
+            <summary>Tipo de entrega (por defecto: DirectHomeDelivery).</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.estimatedDeliveryDate">
+            <summary>Fecha estimada de entrega en formato "yyyy-MM-dd" (opcional).</summary>
+        </member>
+        <member name="P:market_place.OrderRequest.items">
+            <summary>Lista de artículos solicitados (al menos uno).</summary>
+        </member>
+        <member name="T:market_place.OrderItemRequest">
+            <summary>
+            Artículo solicitado dentro de una orden: producto y cantidad.
+            </summary>
+        </member>
+        <member name="P:market_place.OrderItemRequest.productId">
+            <summary>ID del producto a comprar.</summary>
+        </member>
+        <member name="P:market_place.OrderItemRequest.quantity">
+            <summary>Cantidad a comprar del producto (mayor a 0).</summary>
+        </member>
+        <member name="T:market_place.Product">
+            <summary>
+            Producto agrícola publicado por un agricultor en el catálogo.
+            Mapea a la tabla "products".
+            </summary>
+        </member>
+        <member name="P:market_place.Product.id">
+            <summary>Identificador único del producto (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.Product.farmerProfileId">
+            <summary>ID del perfil de agricultor que publica el producto (FK a farmer_profiles).</summary>
+        </member>
+        <member name="P:market_place.Product.categoryId">
+            <summary>ID de la categoría del producto (FK a categories).</summary>
+        </member>
+        <member name="P:market_place.Product.unitOfMeasureId">
+            <summary>ID de la unidad de medida del producto (FK a units_of_measure).</summary>
+        </member>
+        <member name="P:market_place.Product.name">
+            <summary>Nombre del producto.</summary>
+        </member>
+        <member name="P:market_place.Product.description">
+            <summary>Descripción del producto.</summary>
+        </member>
+        <member name="P:market_place.Product.unitPrice">
+            <summary>Precio por unidad de medida (no puede ser negativo).</summary>
+        </member>
+        <member name="P:market_place.Product.stockQuantity">
+            <summary>Cantidad de existencias disponibles (no puede ser negativa).</summary>
+        </member>
+        <member name="P:market_place.Product.isOrganic">
+            <summary>Indica si el producto es orgánico: 1 = orgánico, 0 = no orgánico.</summary>
+        </member>
+        <member name="P:market_place.Product.harvestDate">
+            <summary>Fecha de cosecha del producto en formato "yyyy-MM-dd".</summary>
+        </member>
+        <member name="P:market_place.Product.isActive">
+            <summary>Indica si el producto está activo: 1 = activo, 0 = inactivo.</summary>
+        </member>
+        <member name="P:market_place.Product.createdAt">
+            <summary>Fecha de publicación del producto en formato "yyyy-MM-dd HH:mm:ss".</summary>
+        </member>
+        <member name="T:market_place.ProductReviewsResponse">
+            <summary>
+            Respuesta con las reseñas de un producto y su valoración promedio.
+            </summary>
+        </member>
+        <member name="P:market_place.ProductReviewsResponse.reviews">
+            <summary>Lista de reseñas del producto.</summary>
+        </member>
+        <member name="P:market_place.ProductReviewsResponse.averageRating">
+            <summary>Valoración promedio de las reseñas (0 si no hay reseñas).</summary>
+        </member>
+        <member name="T:market_place.Review">
+            <summary>
+            Reseña de un producto: calificación de 1 a 5 y comentario de un consumidor.
+            Mapea a la tabla "reviews".
+            </summary>
+        </member>
+        <member name="P:market_place.Review.id">
+            <summary>Identificador único de la reseña (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.Review.productId">
+            <summary>ID del producto calificado (FK a products).</summary>
+        </member>
+        <member name="P:market_place.Review.rating">
+            <summary>Calificación del producto (debe estar entre 1 y 5).</summary>
+        </member>
+        <member name="P:market_place.Review.comment">
+            <summary>Comentario del consumidor sobre el producto (opcional).</summary>
+        </member>
+        <member name="P:market_place.Review.createdAt">
+            <summary>Fecha de creación de la reseña en formato "yyyy-MM-dd HH:mm:ss".</summary>
+        </member>
+        <member name="T:market_place.StatusUpdateRequest">
+            <summary>
+            Solicitud para cambiar el estado de una orden.
+            </summary>
+        </member>
+        <member name="P:market_place.StatusUpdateRequest.status">
+            <summary>Nuevo estado de la orden (Pending, Confirmed, Preparing, InTransit, Delivered, Cancelled).</summary>
+        </member>
+        <member name="T:market_place.UnitOfMeasure">
+            <summary>
+            Unidad de medida para la venta de productos (kg, lb, atado, unidad, caja).
+            Mapea a la tabla "units_of_measure".
+            </summary>
+        </member>
+        <member name="P:market_place.UnitOfMeasure.id">
+            <summary>Identificador único de la unidad de medida (autoincremental).</summary>
+        </member>
+        <member name="P:market_place.UnitOfMeasure.name">
+            <summary>Nombre completo de la unidad (ej. "Kilogramo").</summary>
+        </member>
+        <member name="P:market_place.UnitOfMeasure.abbreviation">
+            <summary>Abreviatura de la unidad (ej. "kg").</summary>
+        </member>
+        <member name="T:market_place.VerificationStatus">
+            <summary>
+            Estado de verificación de un perfil de agricultor.
+            </summary>
+        </member>
+        <member name="F:market_place.VerificationStatus.Pending">
+            <summary>El perfil está pendiente de revisión.</summary>
+        </member>
+        <member name="F:market_place.VerificationStatus.Approved">
+            <summary>El perfil fue aprobado.</summary>
+        </member>
+        <member name="F:market_place.VerificationStatus.Rejected">
+            <summary>El perfil fue rechazado.</summary>
+        </member>
+        <member name="T:market_place.StatusOrder">
+            <summary>
+            Estado del ciclo de vida de una orden de compra.
+            </summary>
+        </member>
+        <member name="F:market_place.StatusOrder.Pending">
+            <summary>La orden fue creada y está pendiente de confirmación.</summary>
+        </member>
+        <member name="F:market_place.StatusOrder.Confirmed">
+            <summary>La orden fue confirmada.</summary>
+        </member>
+        <member name="F:market_place.StatusOrder.Preparing">
+            <summary>La orden está en preparación.</summary>
+        </member>
+        <member name="F:market_place.StatusOrder.InTransit">
+            <summary>La orden está en tránsito hacia el destino.</summary>
+        </member>
+        <member name="F:market_place.StatusOrder.Delivered">
+            <summary>La orden fue entregada.</summary>
+        </member>
+        <member name="F:market_place.StatusOrder.Cancelled">
+            <summary>La orden fue cancelada.</summary>
+        </member>
+    </members>
+</doc>

@@ -1,6 +1,122 @@
 @MarketPlace_HostAddress = http://localhost:5008
 
-GET {{MarketPlace_HostAddress}}/weatherforecast/
+### Listar categorías (seed)
+GET {{MarketPlace_HostAddress}}/api/categories
 Accept: application/json
+
+###
+
+### Listar unidades de medida (seed)
+GET {{MarketPlace_HostAddress}}/api/units-of-measure
+Accept: application/json
+
+###
+
+### Registrar agricultor
+POST {{MarketPlace_HostAddress}}/api/farmer-profiles
+Content-Type: application/json
+
+{
+  "farmName": "Finca El Porvenir",
+  "description": "Hortalizas orgánicas de la sabana",
+  "verificationStatus": "Pending",
+  "bankAccountInfo": "Banco Agrario 1234-5678"
+}
+
+###
+
+### Publicar producto
+POST {{MarketPlace_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "farmerProfileId": "REEMPLAZAR_CON_ID_AGRICULTOR",
+  "categoryId": 1,
+  "unitOfMeasureId": 1,
+  "name": "Manzana Roja",
+  "description": "Manzanas frescas de la finca",
+  "unitPrice": 3500,
+  "stockQuantity": 100,
+  "isOrganic": 1,
+  "harvestDate": "2026-07-30"
+}
+
+###
+
+### Crear orden de compra (con dirección de envío y entrega)
+POST {{MarketPlace_HostAddress}}/api/orders
+Content-Type: application/json
+
+{
+  "farmerProfileId": "REEMPLAZAR_CON_ID_AGRICULTOR",
+  "streetAddress": "Calle 10 # 5-20",
+  "municipality": "Chía",
+  "department": "Cundinamarca",
+  "additionalDetails": "Casa esquinera, portón verde",
+  "deliveryType": "DirectHomeDelivery",
+  "estimatedDeliveryDate": "2026-08-02",
+  "notes": "Entregar en la tarde",
+  "items": [
+    {
+      "productId": "REEMPLAZAR_CON_ID_PRODUCTO",
+      "quantity": 2
+    }
+  ]
+}
+
+###
+
+### Consultar detalle de una orden (incluye datos de entrega)
+GET {{MarketPlace_HostAddress}}/api/orders/REEMPLAZAR_CON_ID_ORDEN
+Accept: application/json
+
+###
+
+### Cambiar estado de la orden
+PATCH {{MarketPlace_HostAddress}}/api/orders/REEMPLAZAR_CON_ID_ORDEN/status
+Content-Type: application/json
+
+{
+  "status": "Preparing"
+}
+
+###
+
+### Actualizar datos de entrega (fecha real, notas)
+PATCH {{MarketPlace_HostAddress}}/api/orders/REEMPLAZAR_CON_ID_ORDEN/delivery
+Content-Type: application/json
+
+{
+  "estimatedDeliveryDate": "2026-08-02",
+  "deliveredAt": "2026-08-02",
+  "notes": "Entregado al consumidor"
+}
+
+###
+
+### Registrar reseña de producto
+POST {{MarketPlace_HostAddress}}/api/products/REEMPLAZAR_CON_ID_PRODUCTO/reviews
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "comment": "Excelente calidad y frescura"
+}
+
+###
+
+### Reseñas y promedio de un producto
+GET {{MarketPlace_HostAddress}}/api/products/REEMPLAZAR_CON_ID_PRODUCTO/reviews
+Accept: application/json
+
+###
+
+### Recomendaciones con IA (stub)
+POST {{MarketPlace_HostAddress}}/api/ai/recommendations
+Content-Type: application/json
+
+{
+  "prompt": "Recomiéndame frutas frescas para esta semana"
+}
 
 ###
