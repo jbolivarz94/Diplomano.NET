@@ -7,6 +7,12 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Añadir Configuración
+builder.Services.Configure<GroqSettings>(
+    builder.Configuration.GetSection("Groq"));
+
+builder.Services.AddHttpClient<IGroqService, GroqService>();
+
 // Add services to the container.
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

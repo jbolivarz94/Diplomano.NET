@@ -9,11 +9,12 @@
             Recomendaciones con IA (Groq).
             </summary>
         </member>
-        <member name="M:market_place.AiController.#ctor(market_place.AppDbContext)">
+        <member name="M:market_place.AiController.#ctor(market_place.AppDbContext,IGroqService)">
             <summary>
             Inicializa el controlador con el contexto de base de datos.
             </summary>
             <param name="db">Contexto de Entity Framework Core (AppDbContext).</param>
+            <param name="groq">Servicio de conexión a la API de Groq.</param>
         </member>
         <member name="M:market_place.AiController.GetRecommendations(market_place.AiRequest)">
             <summary>
