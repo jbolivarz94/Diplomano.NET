@@ -346,13 +346,21 @@ Si no se desea exponer la clave en el repositorio, se puede sobrescribir con la 
 
 ## Pruebas y Documentación (QA)
 
-Sección reservada para el equipo de QA, donde se registrarán los artefactos de pruebas del proyecto. Espacio para documentar:
+La validación QA fue realizada por **QA - Lizeth Bedoya** sobre los servicios públicos de la API. Se probaron los flujos principales del marketplace: catálogo, perfiles de agricultor, productos, reseñas, órdenes e IA con Groq.
 
-- **Alcance de las pruebas:** funcional (API), no funcional (rendimiento, seguridad) y regresión.
-- **Matriz de casos de prueba:** ID, caso, pasos, datos de entrada, resultado esperado, resultado obtenido, estado (Pendiente / Aprobado / Fallido / Bloqueado) y evidencia.
-- **Resultados y métricas:** total de casos ejecutados, casos aprobados, casos fallidos, defectos reportados y severidad.
-- **Defectos encontrados:** descripción, pasos para reproducir, resultado esperado vs. obtenido, prioridad y responsable.
-- **Herramientas utilizadas:** Postman, Swagger UI, archivo `MarketPlace.http`, colecciones de pruebas, entre otras.
-- **Evidencias:** capturas de pantalla, colecciones exportadas, reportes generados y registros (logs) relevantes.
+**Resumen de ejecución:**
 
-> Nota: esta sección será completada por Lizeth Anay Bedoya Bolívar (QA).
+| Métrica | Resultado |
+| :--- | :--- |
+| Casos definidos | 44 |
+| Casos correctos | 43 |
+| Caso documentado | 1 |
+| Evidencias generadas | 44 capturas |
+
+**Documentos QA:**
+
+- [Casos de prueba de servicios](./QA_TestCases.md)
+- [Informe de ejecución con evidencias](./QA_InformeEjecucion.md)
+- [Carpeta de evidencias de Casos de Prueba: QA_Capturas/](./QA_Capturas/)
+
+**Nota IA:** el caso documentado corresponde al límite de peticiones de Groq (`429 Too Many Requests`). También se validó el caso exitoso de recomendaciones con IA (`TC-42`). Para controlar el consumo de tokens, el servicio de IA solo envía a Groq los 20 productos mejor calificados del catálogo.
