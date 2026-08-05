@@ -124,7 +124,7 @@
             </summary>
             <returns>Lista de unidades de medida disponibles (kg, lb, atado, unidad, caja).</returns>
         </member>
-        <member name="M:market_place.ProductsController.GetAll(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:market_place.ProductsController.GetAll(System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Lista productos activos con filtros opcionales por categoría, orgánico y agricultor.
             </summary>
@@ -433,44 +433,67 @@
         <member name="T:market_place.Product">
             <summary>
             Producto agrícola publicado por un agricultor en el catálogo.
-            Mapea a la tabla "products".
             </summary>
         </member>
         <member name="P:market_place.Product.id">
-            <summary>Identificador único del producto (autoincremental).</summary>
+            <summary>
+            Identificador numérico del producto.
+            </summary>
         </member>
         <member name="P:market_place.Product.farmerProfileId">
-            <summary>ID del perfil de agricultor que publica el producto (FK a farmer_profiles).</summary>
+            <summary>
+            Identificador numérico del agricultor que publica el producto.
+            </summary>
         </member>
         <member name="P:market_place.Product.categoryId">
-            <summary>ID de la categoría del producto (FK a categories).</summary>
+            <summary>
+            Identificador numérico de la categoría del producto.
+            </summary>
         </member>
         <member name="P:market_place.Product.unitOfMeasureId">
-            <summary>ID de la unidad de medida del producto (FK a units_of_measure).</summary>
+            <summary>
+            Identificador numérico de la unidad de medida del producto.
+            </summary>
         </member>
         <member name="P:market_place.Product.name">
-            <summary>Nombre del producto.</summary>
+            <summary>
+            Nombre del producto (ej. "Tomate cherry orgánico").
+            </summary>
         </member>
         <member name="P:market_place.Product.description">
-            <summary>Descripción del producto.</summary>
+            <summary>
+            Descripción del producto (opcional).
+            </summary>
         </member>
         <member name="P:market_place.Product.unitPrice">
-            <summary>Precio por unidad de medida (no puede ser negativo).</summary>
+            <summary>
+            Precio unitario del producto.
+            </summary>
         </member>
         <member name="P:market_place.Product.stockQuantity">
-            <summary>Cantidad de existencias disponibles (no puede ser negativa).</summary>
+            <summary>
+            Cantidad en stock del producto.
+            </summary>
         </member>
         <member name="P:market_place.Product.isOrganic">
-            <summary>Indica si el producto es orgánico: 1 = orgánico, 0 = no orgánico.</summary>
+            <summary>
+            Indica si el producto es orgánico.
+            </summary>
         </member>
         <member name="P:market_place.Product.harvestDate">
-            <summary>Fecha de cosecha del producto en formato "yyyy-MM-dd".</summary>
+            <summary>
+            Fecha de cosecha del producto (opcional).
+            </summary>
         </member>
         <member name="P:market_place.Product.isActive">
-            <summary>Indica si el producto está activo: 1 = activo, 0 = inactivo.</summary>
+            <summary>
+            Indica si el producto está activo.
+            </summary>
         </member>
         <member name="P:market_place.Product.createdAt">
-            <summary>Fecha de publicación del producto en formato "yyyy-MM-dd HH:mm:ss".</summary>
+            <summary>
+            Fecha de creación del producto.
+            </summary>
         </member>
         <member name="T:market_place.ProductReviewsResponse">
             <summary>

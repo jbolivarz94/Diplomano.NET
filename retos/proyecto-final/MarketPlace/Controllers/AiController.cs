@@ -47,7 +47,7 @@ namespace market_place
                     on p.unitOfMeasureId equals u.id
                 join f in _db.FarmerProfiles
                     on p.farmerProfileId equals f.id
-                where p.isActive == 1
+                where p.isActive
                 select new
                 {
                     p.id,
@@ -96,14 +96,14 @@ namespace market_place
             Unidad de medida: {p.unitOfMeasure}
             Precio: {p.unitPrice}
             Stock disponible: {p.stockQuantity}
-            Orgánico: {(p.isOrganic == 1 ? "Sí" : "No")}
+            Orgánico: {(p.isOrganic ? "Sí" : "No")}
             Fecha de cosecha: {p.harvestDate}
             Fecha de publicación: {p.createdAt}
             Calificación promedio: {p.AverageRating:F1}
             Cantidad de reseñas: {p.Reviews}
             """));
 
-            var now = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+            var now = DateTime.UtcNow;
 
             var prompt = $"""
                         Eres un experto en productos agrícolas.

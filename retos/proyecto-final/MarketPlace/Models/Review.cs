@@ -19,6 +19,6 @@ namespace market_place
         public string comment { get; set; } = string.Empty;
 
         /// <summary>Fecha de creación de la reseña en formato "yyyy-MM-dd HH:mm:ss".</summary>
-        public string createdAt { get; set; } = string.Empty;
+        public DateTime createdAt { get; set; }
     }
 }

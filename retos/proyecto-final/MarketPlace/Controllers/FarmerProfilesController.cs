@@ -51,7 +51,7 @@ namespace market_place
         [HttpPost]
         public async Task<ActionResult<FarmerProfile>> Create(FarmerProfile farmer)
         {
-            farmer.createdAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+            farmer.createdAt = DateTime.UtcNow;
             _db.FarmerProfiles.Add(farmer);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = farmer.id }, farmer);

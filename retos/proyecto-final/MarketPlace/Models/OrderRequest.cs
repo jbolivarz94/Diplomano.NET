@@ -27,7 +27,7 @@ namespace market_place
         public DeliveryType? deliveryType { get; set; }
 
         /// <summary>Fecha estimada de entrega en formato "yyyy-MM-dd" (opcional).</summary>
-        public string estimatedDeliveryDate { get; set; } = string.Empty;
+        public DateOnly? estimatedDeliveryDate { get; set; }
 
         /// <summary>Lista de artículos solicitados (al menos uno).</summary>
         public List<OrderItemRequest> items { get; set; } = new();
@@ -42,6 +42,6 @@ namespace market_place
         public int productId { get; set; }
 
         /// <summary>Cantidad a comprar del producto (mayor a 0).</summary>
-        public float quantity { get; set; }
+        public decimal quantity { get; set; }
     }
 }

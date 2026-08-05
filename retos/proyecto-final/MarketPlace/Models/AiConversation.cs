@@ -19,6 +19,6 @@ namespace market_place
         public int tokensUsed { get; set; }
 
         /// <summary>Fecha de creación del mensaje en formato "yyyy-MM-dd HH:mm:ss".</summary>
-        public string createdAt { get; set; } = string.Empty;
+        public DateTime createdAt { get; set; }
     }
 }

@@ -22,6 +22,6 @@ namespace market_place
         public string bankAccountInfo { get; set; } = string.Empty;
 
         /// <summary>Fecha de creación del perfil en formato "yyyy-MM-dd HH:mm:ss".</summary>
-        public string createdAt { get; set; } = string.Empty;
+        public DateTime createdAt { get; set; }
     }
 }

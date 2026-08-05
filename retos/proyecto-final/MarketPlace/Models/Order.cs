@@ -19,7 +19,7 @@ namespace market_place
         public StatusOrder status { get; set; }
 
         /// <summary>Monto total de la orden (suma del total de sus artículos).</summary>
-        public float totalAmount { get; set; }
+        public decimal totalAmount { get; set; }
 
         /// <summary>Notas generales de la orden (opcional).</summary>
         public string notes { get; set; } = string.Empty;
@@ -40,12 +40,12 @@ namespace market_place
         public DeliveryType deliveryType { get; set; }
 
         /// <summary>Fecha estimada de entrega en formato "yyyy-MM-dd" (opcional).</summary>
-        public string estimatedDeliveryDate { get; set; } = string.Empty;
+        public DateOnly? estimatedDeliveryDate { get; set; }
 
         /// <summary>Fecha real de entrega en formato "yyyy-MM-dd HH:mm:ss" (opcional).</summary>
-        public string deliveredAt { get; set; } = string.Empty;
+        public DateTime? deliveredAt { get; set; }
 
         /// <summary>Fecha de creación de la orden en formato "yyyy-MM-dd HH:mm:ss".</summary>
-        public string createdAt { get; set; } = string.Empty;
+        public DateTime createdAt { get; set; }
     }
 }

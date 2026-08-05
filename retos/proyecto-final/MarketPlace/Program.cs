@@ -1,5 +1,4 @@
 using market_place;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -39,24 +38,12 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
-
-// Inicializar la base de datos desde el archivo schema.sql si no existe.
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var dataSource = new SqliteConnectionStringBuilder(builder.Configuration.GetConnectionString("Default")).DataSource;
-    if (!Path.IsPathRooted(dataSource))
-        dataSource = Path.Combine(builder.Environment.ContentRootPath, dataSource);
-
-    if (!File.Exists(dataSource))
-    {
-        var schemaPath = Path.Combine(builder.Environment.ContentRootPath, "..", "schema.sql");
-        db.Database.ExecuteSqlRaw(File.ReadAllText(schemaPath));
-    }
-}
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();

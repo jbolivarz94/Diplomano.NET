@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Workspace\\diplomado\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj": {}
+    "C:\\Users\\Bryan\\Desktop\\Nueva carpeta\\Diplomano.NET\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj": {}
   },
   "projects": {
-    "D:\\Workspace\\diplomado\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj": {
+    "C:\\Users\\Bryan\\Desktop\\Nueva carpeta\\Diplomano.NET\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Workspace\\diplomado\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj",
+        "projectUniqueName": "C:\\Users\\Bryan\\Desktop\\Nueva carpeta\\Diplomano.NET\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj",
         "projectName": "MarketPlace",
-        "projectPath": "D:\\Workspace\\diplomado\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj",
-        "packagesPath": "C:\\Users\\Jorge\\.nuget\\packages\\",
-        "outputPath": "D:\\Workspace\\diplomado\\retos\\proyecto-final\\MarketPlace\\obj\\",
+        "projectPath": "C:\\Users\\Bryan\\Desktop\\Nueva carpeta\\Diplomano.NET\\retos\\proyecto-final\\MarketPlace\\MarketPlace.csproj",
+        "packagesPath": "C:\\Users\\Bryan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Bryan\\Desktop\\Nueva carpeta\\Diplomano.NET\\retos\\proyecto-final\\MarketPlace\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Jorge\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Bryan\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -48,7 +47,7 @@
               "target": "Package",
               "version": "[8.0.29, )"
             },
-            "Microsoft.EntityFrameworkCore.Sqlite": {
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.11, )"
             },
@@ -76,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.316/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.423/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

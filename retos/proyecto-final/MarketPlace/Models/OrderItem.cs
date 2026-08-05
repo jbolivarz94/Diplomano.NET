@@ -16,12 +16,12 @@ namespace market_place
         public int productId { get; set; }
 
         /// <summary>Cantidad comprada del producto (mayor a 0).</summary>
-        public float quantity { get; set; }
+        public decimal quantity { get; set; }
 
         /// <summary>Precio unitario del producto al momento de la compra.</summary>
-        public float unitPrice { get; set; }
+        public decimal unitPrice { get; set; }
 
         /// <summary>Precio total del artículo (cantidad x precio unitario).</summary>
-        public float totalPrice { get; set; }
+        public decimal totalPrice { get; set; }
     }
 }

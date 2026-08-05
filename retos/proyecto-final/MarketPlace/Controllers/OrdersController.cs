@@ -62,7 +62,7 @@ namespace market_place
                 orderNumber = $"ORD-{DateTime.Now:yyyyMMddHHmmss}-{Guid.NewGuid().ToString()[..4].ToUpper()}",
                 farmerProfileId = request.farmerProfileId,
                 status = StatusOrder.Pending,
-                totalAmount = 0,
+                totalAmount = 0m,
                 notes = request.notes,
                 streetAddress = request.streetAddress,
                 municipality = request.municipality,
@@ -70,7 +70,7 @@ namespace market_place
                 additionalDetails = request.additionalDetails,
                 deliveryType = request.deliveryType ?? DeliveryType.DirectHomeDelivery,
                 estimatedDeliveryDate = request.estimatedDeliveryDate,
-                createdAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+                createdAt = DateTime.UtcNow
             };
 
             var items = new List<OrderItem>();
@@ -81,7 +81,7 @@ namespace market_place
 
                 foreach (var item in request.items)
                 {
-                    var product = await _db.Products.FirstOrDefaultAsync(p => p.id == item.productId && p.isActive == 1);
+                    var product = await _db.Products.FirstOrDefaultAsync(p => p.id == item.productId && p.isActive);
                     if (product is null)
                         return BadRequest($"El producto {item.productId} no existe o está inactivo");
                     if (product.stockQuantity < item.quantity)

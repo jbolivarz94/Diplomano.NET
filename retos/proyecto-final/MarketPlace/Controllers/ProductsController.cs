@@ -44,14 +44,14 @@ namespace market_place
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetAll(
             [FromQuery] int? categoryId,
-            [FromQuery] int? isOrganic,
+            [FromQuery] bool? isOrganic,
             [FromQuery] int? farmerProfileId)
         {
-            var query = _db.Products.Where(p => p.isActive == 1);
+            var query = _db.Products.Where(p => p.isActive);
             if (categoryId.HasValue)
                 query = query.Where(p => p.categoryId == categoryId);
             if (isOrganic.HasValue)
-                query = query.Where(p => p.isOrganic == isOrganic);
+                query = query.Where(p => p.isOrganic == isOrganic.Value);
             if (farmerProfileId.HasValue)
                 query = query.Where(p => p.farmerProfileId == farmerProfileId);
             return await query.ToListAsync();
@@ -90,8 +90,8 @@ namespace market_place
             if (product.unitPrice < 0) return BadRequest("El precio no puede ser negativo");
             if (product.stockQuantity < 0) return BadRequest("El stock no puede ser negativo");
 
-            product.createdAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-            product.isActive = 1;
+            product.createdAt = DateTime.UtcNow;
+            product.isActive = true;
             _db.Products.Add(product);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = product.id }, product);
@@ -124,7 +124,7 @@ namespace market_place
             if (review.rating < 1 || review.rating > 5) return BadRequest("El rating debe estar entre 1 y 5");
 
             review.productId = productId;
-            review.createdAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+            review.createdAt = DateTime.UtcNow;
             _db.Reviews.Add(review);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetReviews), new { productId = review.productId }, review);

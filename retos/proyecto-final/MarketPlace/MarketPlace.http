@@ -30,15 +30,16 @@ POST {{MarketPlace_HostAddress}}/api/products
 Content-Type: application/json
 
 {
-  "farmerProfileId": "REEMPLAZAR_CON_ID_AGRICULTOR",
+  "farmerProfileId": "REEMPLAZAR_CON_ID_AGRICULTOR"",
   "categoryId": 1,
   "unitOfMeasureId": 1,
   "name": "Manzana Roja",
   "description": "Manzanas frescas de la finca",
   "unitPrice": 3500,
   "stockQuantity": 100,
-  "isOrganic": 1,
-  "harvestDate": "2026-07-30"
+  "isOrganic": true,
+  "harvestDate": "2026-07-30",
+  "product" : 1
 }
 
 ###
