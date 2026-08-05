@@ -1,6 +1,2 @@
-./retos\ejercicio-01-luhn\bin
-./retos\ejercicio-01-luhn\obj
-./retos\ejercicio-02-poo\jorge-bolivar\bin
-./retos\ejercicio-02-poo\jorge-bolivar\obj
-./retos\proyecto-final\MarketPlace\bin\
-./retos\proyecto-final\MarketPlace\obj
+**/bin/
+**/obj/

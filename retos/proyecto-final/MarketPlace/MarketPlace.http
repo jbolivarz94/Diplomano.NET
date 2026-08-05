@@ -112,7 +112,7 @@ Accept: application/json
 
 ###
 
-### Recomendaciones con IA (stub)
+### Recomendaciones con IA (integración Groq)
 POST {{MarketPlace_HostAddress}}/api/ai/recommendations
 Content-Type: application/json
 
