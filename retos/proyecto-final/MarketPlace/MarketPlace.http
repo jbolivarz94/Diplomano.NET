@@ -38,8 +38,7 @@ Content-Type: application/json
   "unitPrice": 3500,
   "stockQuantity": 100,
   "isOrganic": true,
-  "harvestDate": "2026-07-30",
-  "product" : 1
+  "harvestDate": "2026-07-30"
 }
 
 ###

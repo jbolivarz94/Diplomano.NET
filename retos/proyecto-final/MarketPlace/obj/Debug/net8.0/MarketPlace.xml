@@ -439,6 +439,7 @@
             <summary>
             Identificador numérico del producto.
             </summary>
+                [Key]
         </member>
         <member name="P:market_place.Product.farmerProfileId">
             <summary>

@@ -70,7 +70,7 @@ namespace market_place
             modelBuilder.Entity<Product>(e =>
             {
                 e.ToTable("products");
-                e.HasKey(p => p.id);
+                e.Property(p => p.id).ValueGeneratedOnAdd();
                 e.Property(p => p.farmerProfileId).HasColumnName("farmer_profile_id");
                 e.Property(p => p.categoryId).HasColumnName("category_id");
                 e.Property(p => p.unitOfMeasureId).HasColumnName("unit_of_measure_id");
