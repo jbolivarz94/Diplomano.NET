@@ -125,7 +125,7 @@ Se ejecutaron peticiones reales contra la API y se capturaron los resultados des
 ![TC-16](QA_Capturas/TC-16.png)
 
 ### TC-17 — Filtrar productos orgánicos
-- **Servicio:** `GET /api/products?isOrganic=1`
+- **Servicio:** `GET /api/products?isOrganic=true`
 - **Esperado:** 200 — **Obtenido:** 200 — **Resultado:** Correcto
 
 ![TC-17](QA_Capturas/TC-17.png)
@@ -328,7 +328,7 @@ Se ejecutaron peticiones reales contra la API y se capturaron los resultados des
 | TC-14 | POST /api/products | 400 | 400 | Correcto |
 | TC-15 | GET /api/products | 200 | 200 | Correcto |
 | TC-16 | GET /api/products?categoryId=1 | 200 | 200 | Correcto |
-| TC-17 | GET /api/products?isOrganic=1 | 200 | 200 | Correcto |
+| TC-17 | GET /api/products?isOrganic=true | 200 | 200 | Correcto |
 | TC-18 | GET /api/products?farmerProfileId={id} | 200 | 200 | Correcto |
 | TC-19 | GET /api/products/{id} | 200 | 200 | Correcto |
 | TC-20 | GET /api/products/{id} | 404 | 404 | Correcto |

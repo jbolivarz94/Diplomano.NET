@@ -58,7 +58,7 @@ Se prueban los 16 servicios que expone la aplicación. La base de datos es SQLit
 | TC-14 | `POST /api/products` | Cantidad de existencias negativa | **400** "El stock no puede ser negativo" | Media |
 | TC-15 | `GET /api/products` | Ver los productos activos | **200** + solo productos activos | Alta |
 | TC-16 | `GET /api/products?categoryId=1` | Filtrar por categoría | **200** + solo productos de esa categoría | Media |
-| TC-17 | `GET /api/products?isOrganic=1` | Filtrar solo productos orgánicos | **200** + solo productos orgánicos | Media |
+| TC-17 | `GET /api/products?isOrganic=true` | Filtrar solo productos orgánicos | **200** + solo productos orgánicos | Media |
 | TC-18 | `GET /api/products?farmerProfileId={id}` | Filtrar por agricultor | **200** + solo productos de ese agricultor | Media |
 | TC-19 | `GET /api/products/{id}` | Consultar un producto que existe | **200** + información del producto | Alta |
 | TC-20 | `GET /api/products/{id}` | Consultar un producto que no existe | **404** | Alta |

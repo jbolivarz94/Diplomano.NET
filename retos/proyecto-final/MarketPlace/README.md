@@ -335,7 +335,7 @@ Si no se desea exponer la clave en el repositorio, se puede sobrescribir con la 
 
 1. **Registrar un agricultor**: `POST /api/farmer-profiles` (guardar el `id` de la respuesta).
 2. **Publicar un producto**: `POST /api/products` usando el `id` del agricultor, `categoryId: 1` y `unitOfMeasureId: 1` (guardar el `id` del producto).
-3. **Consultar el catálogo**: `GET /api/products` y probar filtros como `?categoryId=1` u `?isOrganic=1`.
+3. **Consultar el catálogo**: `GET /api/products` y probar filtros como `?categoryId=1` o `?isOrganic=true`.
 4. **Crear una orden**: `POST /api/orders` con dirección de envío, `deliveryType` y los artículos (verificar que el stock del producto se descuenta).
 5. **Consultar el detalle de la orden**: `GET /api/orders/{id}` (incluye `order_items` y datos de entrega).
 6. **Cambiar estados**: `PATCH /api/orders/{id}/status` (`Confirmed`, `Preparing`, `InTransit`, `Delivered`).
