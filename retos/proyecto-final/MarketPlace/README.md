@@ -363,4 +363,10 @@ La validación QA fue realizada por **QA - Lizeth Bedoya** sobre los servicios p
 - [Informe de ejecución con evidencias](./QA_InformeEjecucion.md)
 - [Carpeta de evidencias de Casos de Prueba: QA_Capturas/](./QA_Capturas/)
 
+**Demostración del funcionamiento:**
+
+[![Swagger AgroMarket - 7 August 2026 - Watch Video](https://cdn.loom.com/sessions/thumbnails/901706e7367440469279012f505cdb3e-00b9e675717d1b80-full-play.gif#t=0.1)](https://www.loom.com/share/901706e7367440469279012f505cdb3e)
+
+[Ver video demo en Loom](https://www.loom.com/share/901706e7367440469279012f505cdb3e)
+
 **Nota IA:** el caso documentado corresponde al límite de peticiones de Groq (`429 Too Many Requests`). También se validó el caso exitoso de recomendaciones con IA (`TC-42`). Para controlar el consumo de tokens, el servicio de IA solo envía a Groq los 20 productos mejor calificados del catálogo.
